@@ -4,6 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+Flask = "*"
+python-dotenv = "*"
+Flask-Limiter = "*"
+Flask-Talisman = "*"
+Flask-SQLAlchemy = "*"
+Flask-CORS = "*"
 
 [dev-packages]
 
