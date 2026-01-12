@@ -27,7 +27,7 @@ def create_app(config_name='default'):
     CORS(app)  # Enable CORS for all routes
     Talisman(app)  # Add security headers
 
-    # Register blueprints (to be implemented)
+    # Register blueprints
     # from routes.admin_routes import admin_bp
     # app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
@@ -40,8 +40,8 @@ def create_app(config_name='default'):
     # from routes.comment_routes import comment_bp
     # app.register_blueprint(comment_bp, url_prefix='/api/comments')
 
-    # from routes.post_routes import post_bp
-    # app.register_blueprint(post_bp, url_prefix='/api/posts')
+    from routes.post_routes import post_bp
+    app.register_blueprint(post_bp, url_prefix='/api')
 
     # from routes.reaction_routes import reaction_bp
     # app.register_blueprint(reaction_bp, url_prefix='/api/reactions')
