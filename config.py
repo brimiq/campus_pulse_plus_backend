@@ -1,17 +1,38 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+import os
+from dotenv import load_dotenv
 
-db = SQLAlchemy()
-migrate = Migrate()
+# Load environment variables from .env file
+load_dotenv()
 
-def create_app():
-    app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///campus.db"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["SECRET_KEY"] = "secret-key"
+class Config:
+    """Base configuration class."""
+    SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///app.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DEBUG = False
+    TESTING = False
+    FLASK_ENV = os.getenv('FLASK_ENV', 'production')
 
-    db.init_app(app)
-    migrate.init_app(app, db)
+class DevelopmentConfig(Config):
+    """Development configuration."""
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URI', 'sqlite:///dev.db')
 
-    return app
+class TestingConfig(Config):
+    """Testing configuration."""
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URI', 'sqlite:///test.db')
+    WTF_CSRF_ENABLED = False
+
+class ProductionConfig(Config):
+    """Production configuration."""
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
+
+# Configuration mapping
+config = {
+    'development': DevelopmentConfig,
+    'testing': TestingConfig,
+    'production': ProductionConfig,
+    'default': DevelopmentConfig
+}
