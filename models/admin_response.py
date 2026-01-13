@@ -11,3 +11,6 @@ class AdminResponse(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"))
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    # relationship
+    admin = relationship("User")
