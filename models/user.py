@@ -20,3 +20,8 @@ class User(db.Model):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password_hash, password)
 
+    @validates("email")
+    def validate_email(self, key, email):
+        if not email:
+            raise ValueError("Email required")
+        return email
