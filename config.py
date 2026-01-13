@@ -1,26 +1,17 @@
-from flask import Blueprint, request, session
-from models import db, User, AdminResponse
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
-admin_bp = Blueprint("admin", __name__)
+db = SQLAlchemy()
+migrate = Migrate()
 
-def admin_required():
-    user = User.query.get(session.get("user_id"))
-    return user and user.is_admin()
+def create_app():
+    app = Flask(__name__)
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///campus.db"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SECRET_KEY"] = "secret-key"
 
-@admin_bp.route("/admin/responses", methods=["POST"])
-def create_admin_response():
-    if not admin_required():
-        return {"error": "Admin only"}, 403
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-    data = request.get_json()
-
-    response = AdminResponse(
-        content=data["content"],
-        post_id=data["post_id"],
-        admin_id=session["user_id"]
-    )
-
-    db.session.add(response)
-    db.session.commit()
-
-    return response.to_dict(), 201
+    return app
