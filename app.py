@@ -3,13 +3,15 @@ from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
 from config import config
+from db import db
+
+# Import models to register them with SQLAlchemy
+from models import user, category, post
 
 # Initialize extensions
-db = SQLAlchemy()
 limiter = Limiter(key_func=get_remote_address)
 ma = Marshmallow()
 
@@ -45,6 +47,9 @@ def create_app(config_name='default'):
 
     # from routes.reaction_routes import reaction_bp
     # app.register_blueprint(reaction_bp, url_prefix='/api/reactions')
+
+    # Import models to ensure they are registered
+    from models.post import Post
 
     # Create database tables
     with app.app_context():

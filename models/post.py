@@ -1,7 +1,7 @@
 from datetime import datetime
 from marshmallow import Schema, fields, validate, ValidationError
 
-from app import db
+from db import db
 
 class Post(db.Model):
     __tablename__ = 'posts'
